@@ -1,0 +1,11 @@
+allow_images=true
+allow_markup=true
+height=400
+width=600
+hide_scroll=true
+monitor=DP-3
+key_up=k
+key_down=j
+key_exit=Super_L
+
+drun-display_generic=true
