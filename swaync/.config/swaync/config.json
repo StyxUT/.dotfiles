@@ -15,8 +15,8 @@
   "notification-icon-size": 64,
   "notification-body-image-height": 100,
   "notification-body-image-width": 200,
-  "timeout": 15,
-  "timeout-low": 7,
+  "timeout": 17,
+  "timeout-low": 8,
   "timeout-critical": 0,
   "fit-to-screen": true,
   "relative-timestamps": true,
@@ -43,9 +43,16 @@
   },
   "notification-visibility": {
     "example-name": {
-      "state": "muted",
+      "state": "transient",
       "urgency": "Low",
       "app-name": "Spotify"
+    }
+  },
+  "notification-visibility": {
+    "example-name": {
+      "state": "transient",
+      "urgency": "Medium",
+      "app-name": "Signal"
     }
   },
   "widgets": [
