@@ -62,7 +62,9 @@
         "group/links",
         "group/settings",
         "group/quicklinks",
-        "custom/empty"
+        "custom/empty",
+				"calculator"
+
     ],
 
     // Modules Center
@@ -77,13 +79,13 @@
         "pulseaudio",
         //"backlight",
         "bluetooth",
-        "battery", 
+        //"battery", 
         "network",
-        "group/hardware",
-        "group/tools",
-        "custom/exit",
+        //"group/hardware",
+        //"group/tools",
+        //"custom/exit",
         "clock",
-        "tray",
-        "custom/ml4w-welcome"
+        //"tray",
+        //"custom/ml4w-welcome"
     ]
 }

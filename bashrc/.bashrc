@@ -3,6 +3,7 @@
 #
 
 export KUBECONFIG=~/.kube/k3s.yaml
+export EDITOR=/usr/bin/vim
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return

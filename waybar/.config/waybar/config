@@ -59,16 +59,18 @@
     "modules-left": [
         "custom/appmenuicon",
         "hyprland/workspaces",
-        "group/links",
-        "group/settings",
-        "group/quicklinks",
-        "custom/empty"
+        //"group/links",
+        //"group/settings",
+        //"group/quicklinks",
+        "custom/empty",
+				"custom/calculator"
     ],
 
     // Modules Center
     "modules-center": [
-        "hyprland/window",
-        "custom/empty"
+        //"hyprland/window",
+        "custom/empty",
+				"clock"
     ],
 
     // Modules Right    
@@ -76,14 +78,14 @@
         "custom/updates",
         "pulseaudio",
         //"backlight",
-        "bluetooth",
-        "battery", 
+        //"bluetooth",
+        //"battery", 
         "network",
-        "group/hardware",
-        "group/tools",
-        "custom/exit",
-        "clock",
-        "tray",
-        "custom/ml4w-welcome"
+        //"group/hardware",
+        //"group/tools",
+       // "custom/exit"
+       // "clock",
+       // "tray",
+       // "custom/ml4w-welcome"
     ]
 }
