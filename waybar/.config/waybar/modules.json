@@ -23,6 +23,7 @@
       "*": 5
     }
   },
+	
   // Taskbar
   "wlr/taskbar": {
     "format": "{icon}",

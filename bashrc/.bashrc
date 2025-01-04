@@ -4,6 +4,7 @@
 
 export KUBECONFIG=~/.kube/k3s.yaml
 export EDITOR=/usr/bin/vim
+export OLLAMA_HOST=0.0.0.0
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -12,6 +13,7 @@ alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 alias kc='kubectl'
 alias vim='nvim'
+alias rm='rm -I'
 
 source ~/git-prompt.sh
 #PS1='[\u@\h \W$(__git_ps1 " (%s)")]\$ '
