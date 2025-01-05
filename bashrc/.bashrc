@@ -2,6 +2,7 @@
 # ~/.bashrc
 #
 
+export HOME=/home/styxut
 export KUBECONFIG=~/.kube/k3s.yaml
 export EDITOR=/usr/bin/vim
 export OLLAMA_HOST=0.0.0.0
