@@ -5,7 +5,11 @@
 export HOME=/home/styxut
 export KUBECONFIG=~/.kube/k3s.yaml
 export EDITOR=/usr/bin/vim
+
+# ollama
 export OLLAMA_HOST=0.0.0.0
+export HIP_VISIBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=-1  # hide NVIDIA devices
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
