@@ -18,8 +18,29 @@ export OLLAMA_LLAMA_EXTRA_ARGS="--flash-attn"  #use Flash Attention
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 alias kc='kubectl'
-alias vim='nvim'
 alias rm='rm -I'
+
+# bash parameter completion for the dotnet CLI
+function _dotnet_bash_complete()
+{
+  local cur="${COMP_WORDS[COMP_CWORD]}" IFS=$'\n' # On Windows you may need to use use IFS=$'\r\n'
+  local candidates
+
+  read -d '' -ra candidates < <(dotnet complete --position "${COMP_POINT}" "${COMP_LINE}" 2>/dev/null)
+
+  read -d '' -ra COMPREPLY < <(compgen -W "${candidates[*]:-}" -- "$cur")
+}
+complete -f -F _dotnet_bash_complete dotnet
+
+# have vim call nvim, and sudo vim call sudo -E nvim
+vim() {
+    if [ "$EUID" -eq 0 ]; then
+        sudo -E nvim "$@"
+    else
+        nvim "$@"
+    fi
+}
+export -f vim
 
 source ~/git-prompt.sh
 #PS1='[\u@\h \W$(__git_ps1 " (%s)")]\$ '
