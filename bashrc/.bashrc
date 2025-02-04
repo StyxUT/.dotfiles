@@ -19,6 +19,7 @@ alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 alias kc='kubectl'
 alias rm='rm -I'
+alias rider='/home/styxut/.local/share/JetBrains\ Rider-2024.3.4/bin/rider.sh &' 
 
 # bash parameter completion for the dotnet CLI
 function _dotnet_bash_complete()
