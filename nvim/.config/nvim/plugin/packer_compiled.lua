@@ -49,8 +49,8 @@ local function save_profiles(threshold)
 end
 
 time([[Luarocks path setup]], true)
-local package_path_str = "/home/styxut/.cache/nvim/packer_hererocks/2.1.1731601260/share/lua/5.1/?.lua;/home/styxut/.cache/nvim/packer_hererocks/2.1.1731601260/share/lua/5.1/?/init.lua;/home/styxut/.cache/nvim/packer_hererocks/2.1.1731601260/lib/luarocks/rocks-5.1/?.lua;/home/styxut/.cache/nvim/packer_hererocks/2.1.1731601260/lib/luarocks/rocks-5.1/?/init.lua"
-local install_cpath_pattern = "/home/styxut/.cache/nvim/packer_hererocks/2.1.1731601260/lib/lua/5.1/?.so"
+local package_path_str = "/root/.cache/nvim/packer_hererocks/2.1.1731601260/share/lua/5.1/?.lua;/root/.cache/nvim/packer_hererocks/2.1.1731601260/share/lua/5.1/?/init.lua;/root/.cache/nvim/packer_hererocks/2.1.1731601260/lib/luarocks/rocks-5.1/?.lua;/root/.cache/nvim/packer_hererocks/2.1.1731601260/lib/luarocks/rocks-5.1/?/init.lua"
+local install_cpath_pattern = "/root/.cache/nvim/packer_hererocks/2.1.1731601260/lib/lua/5.1/?.so"
 if not string.find(package.path, package_path_str, 1, true) then
   package.path = package.path .. ';' .. package_path_str
 end
@@ -76,47 +76,47 @@ time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
   ["gruvbox.nvim"] = {
     loaded = true,
-    path = "/home/styxut/.local/share/nvim/site/pack/packer/start/gruvbox.nvim",
+    path = "/root/.local/share/nvim/site/pack/packer/start/gruvbox.nvim",
     url = "https://github.com/ellisonleao/gruvbox.nvim"
   },
   ["lualine.nvim"] = {
     loaded = true,
-    path = "/home/styxut/.local/share/nvim/site/pack/packer/start/lualine.nvim",
+    path = "/root/.local/share/nvim/site/pack/packer/start/lualine.nvim",
     url = "https://github.com/nvim-lualine/lualine.nvim"
   },
   ["nvim-tree.lua"] = {
     loaded = true,
-    path = "/home/styxut/.local/share/nvim/site/pack/packer/start/nvim-tree.lua",
+    path = "/root/.local/share/nvim/site/pack/packer/start/nvim-tree.lua",
     url = "https://github.com/nvim-tree/nvim-tree.lua"
   },
   ["nvim-treesitter"] = {
     loaded = true,
-    path = "/home/styxut/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
+    path = "/root/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
     url = "https://github.com/nvim-treesitter/nvim-treesitter"
   },
   ["nvim-web-devicons"] = {
     loaded = true,
-    path = "/home/styxut/.local/share/nvim/site/pack/packer/start/nvim-web-devicons",
+    path = "/root/.local/share/nvim/site/pack/packer/start/nvim-web-devicons",
     url = "https://github.com/nvim-tree/nvim-web-devicons"
   },
   ["packer.nvim"] = {
     loaded = true,
-    path = "/home/styxut/.local/share/nvim/site/pack/packer/start/packer.nvim",
+    path = "/root/.local/share/nvim/site/pack/packer/start/packer.nvim",
     url = "https://github.com/wbthomason/packer.nvim"
   },
   ["plenary.nvim"] = {
     loaded = true,
-    path = "/home/styxut/.local/share/nvim/site/pack/packer/start/plenary.nvim",
+    path = "/root/.local/share/nvim/site/pack/packer/start/plenary.nvim",
     url = "https://github.com/nvim-lua/plenary.nvim"
   },
   ["solarized-osaka.nvim"] = {
     loaded = true,
-    path = "/home/styxut/.local/share/nvim/site/pack/packer/start/solarized-osaka.nvim",
+    path = "/root/.local/share/nvim/site/pack/packer/start/solarized-osaka.nvim",
     url = "https://github.com/craftzdog/solarized-osaka.nvim"
   },
   ["telescope.nvim"] = {
     loaded = true,
-    path = "/home/styxut/.local/share/nvim/site/pack/packer/start/telescope.nvim",
+    path = "/root/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
   }
 }
