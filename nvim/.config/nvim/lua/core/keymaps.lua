@@ -1,6 +1,10 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.keymap.set('n', '<leader>r', function()
+  vim.cmd('!go run .')
+end, { desc = "Run current Go file" })
+
 -- Copy/paste from system clipboard
 vim.keymap.set({ 'n', 'x' }, 'cp', '"+y')
 vim.keymap.set({ 'n', 'x' }, 'cv', '"+p')

@@ -53,5 +53,5 @@ complete -o default -F __start_kubectl kc
 
 # Created by `pipx` on 2024-12-11 02:33:37
 export PATH="$PATH:/home/styxut/.local/bin"
-
+export PATH="$PATH:/home/styxut/go/bin"
 neofetch
