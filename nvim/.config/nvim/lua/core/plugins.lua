@@ -24,6 +24,11 @@ return require("packer").startup(function(use)
   use 'nvim-tree/nvim-web-devicons'
   use 'nvim-lualine/lualine.nvim'
   use 'neovim/nvim-lspconfig'
+  use 'mfussenegger/nvim-dap' -- Core DAP plugin
+  use 'rcarriga/nvim-dap-ui'  -- UI for DAP
+  use 'leoluz/nvim-dap-go'    -- Go-specific DAP integration
+  --use 'theHamsta/nvim-dap-virtual-text'
+	use 'nvim-neotest/nvim-nio'
   use { 'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim' }
   use 'nvim-treesitter/nvim-treesitter'
   use {
