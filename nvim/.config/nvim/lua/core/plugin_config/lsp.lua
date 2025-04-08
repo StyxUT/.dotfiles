@@ -6,7 +6,7 @@ local capabilities = cmp_nvim_lsp.default_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 lspconfig.gopls.setup({
-  capabilities = capabilities, -- 🟢 Fix: Ensures nvim-cmp can use LSP completion
+  capabilities = capabilities,
   on_attach = function(client, bufnr)
     if client.server_capabilities.documentFormattingProvider then
       vim.api.nvim_create_autocmd("BufWritePre", {
@@ -20,9 +20,12 @@ lspconfig.gopls.setup({
   end,
   settings = {
     gopls = {
-      gofumpt = true,
       staticcheck = true,
+      analyses = {
+        unusedparams = true,
+        shadow = true,
+        nilness = true,
+      },
     },
   },
 })
-

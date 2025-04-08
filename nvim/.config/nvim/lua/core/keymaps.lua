@@ -4,6 +4,10 @@ vim.g.maplocalleader = ' '
 vim.keymap.set('n', '<leader>r', function()
   vim.cmd('!go run .')
 end, { desc = "Run current Go file" })
+vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float)
+vim.keymap.set('n', '<leader>u', function()
+	vim.cmd('!go mod tidy && go build')
+end, {desc = "Tidy and build Go package" })
 
 -- Copy/paste from system clipboard
 vim.keymap.set({ 'n', 'x' }, 'cp', '"+y')
