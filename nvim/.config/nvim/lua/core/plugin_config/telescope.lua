@@ -1,14 +1,14 @@
-require'nvim-treesitter.configs'.setup {
-  -- A list of parser names, or "all"
-  ensure_installed = { "json", "lua", "sql", "yaml", "vim", "go" },
+require('telescope').setup({
+  defaults = {
+    mappings = {
+      i = {
+        ["<C-u>"] = false,
+        ["<C-d>"] = false,
+      },
+    },
+  },
+})
 
-  -- Install parsers synchronously (only applied to `ensure_installed`)
-  sync_install = false,
-  auto_install = true,
-  highlight = {
-    enable = true,
-  },
-  indent = {
-    enable = true,
-  },
-}
+-- Optional: Load extensions
+-- require('telescope').load_extension('fzf')
+
