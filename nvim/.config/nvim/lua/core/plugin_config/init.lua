@@ -1,4 +1,5 @@
 --require("core.plugin_config.gruvbox")
+require("core.plugin_config.neotest")
 require("core.plugin_config.solarized-osaka")
 require("core.plugin_config.lualine")
 require("core.plugin_config.nvim-tree")

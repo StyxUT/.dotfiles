@@ -119,6 +119,16 @@ _G.packer_plugins = {
     path = "/home/styxut/.local/share/nvim/site/pack/packer/start/mason.nvim",
     url = "https://github.com/williamboman/mason.nvim"
   },
+  neotest = {
+    loaded = true,
+    path = "/home/styxut/.local/share/nvim/site/pack/packer/start/neotest",
+    url = "https://github.com/nvim-neotest/neotest"
+  },
+  ["neotest-go"] = {
+    loaded = true,
+    path = "/home/styxut/.local/share/nvim/site/pack/packer/start/neotest-go",
+    url = "https://github.com/nvim-neotest/neotest-go"
+  },
   ["nvim-cmp"] = {
     loaded = true,
     path = "/home/styxut/.local/share/nvim/site/pack/packer/start/nvim-cmp",

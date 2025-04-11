@@ -46,9 +46,16 @@ return require("packer").startup(function(use)
       "saadparwaiz1/cmp_luasnip" -- Snippet completions
     }
   }
+  use {
+  	"nvim-neotest/neotest",
+  	requires = {
+    	"nvim-lua/plenary.nvim",
+    	"nvim-treesitter/nvim-treesitter",
+    	"nvim-neotest/neotest-go"
+  }
+}
 
   if packer_bootstrap then
     require("packer").sync()
   end
 end)
-
