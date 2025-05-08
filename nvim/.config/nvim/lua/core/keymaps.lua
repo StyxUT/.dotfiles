@@ -17,6 +17,12 @@ vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, { desc = "Signature hel
 vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = "Rename symbol" })
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = "LSP Hover Docs" })
 vim.keymap.set("n", "<leader>km", "<cmd>Telescope keymaps<CR>", { desc = "List keymaps" })
+vim.keymap.set("n", "<leader>dt", function()
+  require("dap-go").debug_test()
+end, { desc = "Debug Go test" })
+vim.keymap.set('n', '<leader>dq', function()
+  require('dap').terminate()
+end, { desc = "Stop (terminate) DAP session" })
 
 -- Copy/paste from system clipboard
 vim.keymap.set({ 'n', 'x' }, 'cp', '"+y')
