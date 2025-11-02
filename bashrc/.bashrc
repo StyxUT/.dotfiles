@@ -11,6 +11,9 @@ export OLLAMA_HOST=0.0.0.0
 export HIP_VISIBLE_DEVICES=0
 export CUDA_VISIBLE_DEVICES=-1  # hide NVIDIA devices
 export OLLAMA_LLAMA_EXTRA_ARGS="--flash-attn"  #use Flash Attention
+# gaming
+export DRI_PRIME=1
+export WLR_RENDERER=vulkan
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -55,3 +58,6 @@ complete -o default -F __start_kubectl kc
 export PATH="$PATH:/home/styxut/.local/bin"
 export PATH="$PATH:/home/styxut/go/bin"
 neofetch
+
+# opencode
+export PATH=/home/styxut/.opencode/bin:$PATH
