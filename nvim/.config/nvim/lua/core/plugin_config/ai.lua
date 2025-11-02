@@ -13,4 +13,10 @@ vim.keymap.set({ "n", "x" }, "ga",     function() oc.prompt("@this") end, { desc
 vim.keymap.set({ "n", "t" }, "<C-.>",  function() oc.toggle() end, { desc = "OpenCode toggle TUI" })
 vim.keymap.set("n", "<S-C-u>", function() oc.command("session.half.page.up") end)
 vim.keymap.set("n", "<S-C-d>", function() oc.command("session.half.page.down") end)
+for _, key in ipairs({ "<C-w>p", "<C-w>w", "<C-w>h", "<C-w>l" }) do
+  vim.keymap.set("t", key, function()
+    vim.api.nvim_input("<C-\\><C-n>")
+    vim.cmd("wincmd p")
+  end, { desc = "Leave OpenCode float" })
+end
 
