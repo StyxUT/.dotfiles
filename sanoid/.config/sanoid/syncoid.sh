@@ -61,6 +61,7 @@ start_replication() {
     RUN_PIDS+=("$!")
     RUN_SRC+=("$ds")
     RUN_DEST+=("$dest")
+    RUN_START+=("$(date +%s)")
   else
     log "FAIL_START [DATASET=$ds] [DEST=$dest]"
     fail=1
@@ -72,15 +73,16 @@ wait_batch() {
   for i in "${!RUN_PIDS[@]}"; do
     pid=${RUN_PIDS[$i]}
     if wait "$pid"; then
-      log "SUCCESS [DATASET=${RUN_SRC[$i]}] [DEST=${RUN_DEST[$i]}]"
+      log "SUCCESS [DATASET=${RUN_SRC[$i]}] [DEST=${RUN_DEST[$i]}] [DURATION=$(($(date +%s)-${RUN_START[$i]}))s]"
     else
-      log "FAIL [DATASET=${RUN_SRC[$i]}] [DEST=${RUN_DEST[$i]}]"
+      log "FAIL [DATASET=${RUN_SRC[$i]}] [DEST=${RUN_DEST[$i]}] [DURATION=$(($(date +%s)-${RUN_START[$i]}))s]"
       fail=1
     fi
   done
   RUN_PIDS=()
   RUN_SRC=()
-  RUN_DEST=()
+RUN_DEST=()
+RUN_START=()
 }
 
 for ds in "${DATASETS[@]}"; do
