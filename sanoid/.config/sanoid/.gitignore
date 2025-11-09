@@ -1,0 +1,29 @@
+# Logs (should normally live in /var/log, ignore if copied here)
+*.log
+sanoid-pruning.log
+syncoid-post.log
+
+# Lock files
+*.lock
+
+# Temporary files
+*.tmp
+*.temp
+
+# Editor backup/swap files
+*~
+*.swp
+*.swo
+
+# OS/desktop cruft
+.DS_Store
+Thumbs.db
+
+# Archives
+*.tar
+*.tar.*
+
+# Misc
+.profile.cache
+AGENTS.md
+datasets.txt
