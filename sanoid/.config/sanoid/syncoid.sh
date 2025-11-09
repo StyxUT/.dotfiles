@@ -42,20 +42,59 @@ if ! command -v syncoid >/dev/null 2>&1; then
   log "syncoid not found in PATH"; exit 1
 fi
 
-for ds in "${DATASETS[@]}"; do
-  # Derive destination by replacing leading 'zroot' with DEST_POOL
+# Concurrency (number of simultaneous syncoid processes); default 2
+CONCURRENT="${CONCURRENT:-2}"
+
+RUN_PIDS=()
+RUN_SRC=()
+RUN_DEST=()
+
+start_replication() {
+  local ds="$1"
   if [[ $ds != zroot/* ]]; then
-    log "Skipping unexpected dataset name '$ds' (does not start with zroot/)"; continue
+    log "Skipping unexpected dataset name '$ds' (does not start with zroot/)"; return 0
   fi
-  dest=${ds/zroot/$DEST_POOL}
-  log "Replicating $ds -> $dest"
-  if syncoid "${SYNCOID_BASE_OPTS[@]}" "$ds" "$dest" >>"$LOG" 2>&1; then
-    log "SUCCESS $ds -> $dest"
+  local dest=${ds/zroot/$DEST_POOL}
+  log "START $ds -> $dest"
+  # Launch syncoid in background; stdout/stderr already appended to LOG
+  if syncoid "${SYNCOID_BASE_OPTS[@]}" "$ds" "$dest" >>"$LOG" 2>&1 & then
+    RUN_PIDS+=("$!")
+    RUN_SRC+=("$ds")
+    RUN_DEST+=("$dest")
   else
-    log "FAIL $ds -> $dest"
+    log "FAIL_START $ds -> $dest"
     fail=1
   fi
+}
+
+wait_batch() {
+  local i pid rc
+  for i in "${!RUN_PIDS[@]}"; do
+    pid=${RUN_PIDS[$i]}
+    if wait "$pid"; then
+      log "SUCCESS ${RUN_SRC[$i]} -> ${RUN_DEST[$i]}"
+    else
+      log "FAIL ${RUN_SRC[$i]} -> ${RUN_DEST[$i]}"
+      fail=1
+    fi
+  done
+  RUN_PIDS=()
+  RUN_SRC=()
+  RUN_DEST=()
+}
+
+for ds in "${DATASETS[@]}"; do
+  start_replication "$ds"
+  if (( CONCURRENT > 1 )) && (( ${#RUN_PIDS[@]} >= CONCURRENT )); then
+    wait_batch
+  fi
+  # Sequential mode if CONCURRENT <=1: batch flush immediately
+  if (( CONCURRENT <= 1 )); then
+    wait_batch
+  fi
 done
+# Flush any remaining background jobs
+wait_batch
 
 if (( fail == 0 )); then
   log "All replications completed successfully"
