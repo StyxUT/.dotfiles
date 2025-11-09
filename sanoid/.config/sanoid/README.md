@@ -1,5 +1,9 @@
 # ZFS Snapshot Management with Sanoid
 
+This directory is an override Sanoid config dir (passed with `--configdir=/home/styxut/.config/sanoid` in the systemd unit) rather than `/etc/sanoid`. Templates and scripts live alongside `sanoid.conf` for portability.
+
+
+
 This directory contains configuration files and scripts for managing ZFS snapshots using Sanoid.
 
 ## Overview
@@ -27,6 +31,14 @@ ExecStart=/usr/bin/sanoid --take-snapshots --prune-snapshots --verbose --configd
 
 ### Retention Policies
 
+Retention is defined by templates in `sanoid.conf`:
+
+- `template_production`: frequent snapshots (`frequently=5` every `frequent_period=20` minutes), plus hourly(5) and daily(8). Monthly/yearly disabled.
+- `template_backup`: receives replicated snapshots only (`autosnap = no`), retains hourly(10), daily(8), monthly(6).
+- `template_scripts`: adds hook scripts; does not alter counts.
+
+Pruning also calls the standalone pruning script for age-based cleanup beyond counts (see Pruning Wrapper section).
+
 The system is configured with the following snapshot retention policies:
 
 1. **Frequently** snapshots: Kept for 2 days
@@ -42,9 +54,31 @@ The configuration uses several templates:
 - `template_backup`: For backup datasets (no automatic snapshots, just retention)
 - `template_scripts`: Defines pre/post snapshot and pruning scripts
 
+## Datasets and Replication
+
+Managed source datasets (recursive) in `sanoid.conf`:
+
+- `zroot/ROOT/arch_hyprland`
+- `zroot/data`
+- `zroot/usr`
+
+Remote backup root dataset:
+- `zfs-remote/data` (replicated copy; no local autosnap)
+
+Replication workflow:
+1. Sanoid takes snapshots on source datasets via `template_production`.
+2. After each snapshot, `post_snapshot_script` (`syncoid.sh`) runs.
+3. `syncoid.sh` loads list of datasets from `datasets.txt` (one per line, comments allowed) and replicates each to the remote pool (`zfs-remote`) transforming `zroot/...` to `zfs-remote/...`.
+4. Compression `zstd-max`, bandwidth limit `80M`, `--no-sync-snap` is used to avoid creating extra sync snapshots.
+5. Failures are logged in `/var/log/syncoid-post.log`.
+
+Add or remove datasets by editing `datasets.txt` and ensuring corresponding entries exist in `sanoid.conf`.
+
 ## Scripts
 
 ### Pruning Wrapper
+
+`pruning-wrapper.sh` runs the age-based prune script for each snapshot class. It currently also includes lines targeting an older backup pool path (`zfs-pool-WD1TB-1/zfs-backups`). Update those lines to point to `zfs-remote/data` (or remove if relying solely on Sanoid retention on the remote).
 
 The `pruning-wrapper.sh` script handles running the pruning script with different parameters for different snapshot types:
 
@@ -72,6 +106,15 @@ The setup runs via a systemd timer (`sanoid.timer`) which triggers every 15 minu
 Pruning operations are logged to `/var/log/sanoid-pruning.log`.
 
 ## Troubleshooting
+
+### Replication Issues
+
+- Check `/var/log/syncoid-post.log` for per-dataset success/fail entries.
+- Ensure `datasets.txt` exists and is readable; script aborts otherwise.
+- Verify `syncoid` installed (`command -v syncoid`).
+- Manually dry-run a single dataset: `syncoid --no-sync-snap --dry-run zroot/data zfs-remote/data`.
+- Confirm destination pool and dataset names (`zfs list zfs-remote/data`).
+
 
 If snapshots are not being pruned:
 
