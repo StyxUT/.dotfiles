@@ -68,9 +68,27 @@ Remote backup root dataset:
 Replication workflow:
 1. Sanoid takes snapshots on source datasets via `template_production`.
 2. After each snapshot, `post_snapshot_script` (`syncoid.sh`) runs.
-3. `syncoid.sh` loads list of datasets from `datasets.txt` (one per line, comments allowed) and replicates each to the remote pool (`zfs-remote`) transforming `zroot/...` to `zfs-remote/...`.
-4. Compression `zstd-max`, bandwidth limit `80M`, `--no-sync-snap` is used to avoid creating extra sync snapshots.
-5. Failures are logged in `/var/log/syncoid-post.log`.
+3. `syncoid.sh` loads list of datasets from `datasets.txt` (one per line, comments allowed) and replicates each to the remote pool, transforming `<source-pool>/...` to `<remote-pool>/...`.
+4. Compression (`COMPRESSION`), bandwidth cap (`BW_LIMIT`), and base flags (`--no-sync-snap`) are configured near the top of `syncoid.sh`.
+5. Transfers currently run sequentially; concurrency can be introduced by exporting a variable (e.g. `CONCURRENT=3`) and wrapping the loop to background jobs with a wait, or by piping the dataset list through `xargs -P <n> syncoid ...`. This is left manual to avoid overload by default.
+6. Failures and progress are logged in `/var/log/syncoid-post.log`.
+
+Adjusting bandwidth: set `BW_LIMIT=""` to remove cap or change value (e.g. `40M`).
+Adding concurrency example (edit script):
+```
+CONCURRENT=3
+sem_count=0
+for ds in "${DATASETS[@]}"; do
+  # derive dest ...
+  syncoid "${SYNCOID_BASE_OPTS[@]}" "$ds" "$dest" &
+  ((sem_count++))
+  if (( sem_count >= CONCURRENT )); then
+    wait
+    sem_count=0
+  fi
+done
+wait
+```
 
 Add or remove datasets by editing `datasets.txt` and ensuring corresponding entries exist in `sanoid.conf`.
 
