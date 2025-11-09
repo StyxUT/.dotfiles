@@ -10,7 +10,7 @@ flock -n 9 || exit 0
 
 # Configuration (adjust as needed)
 DEST_POOL="zfs-remote"          # Remote root/pool name (update if different)
-COMPRESSION="zstd-max"          # syncoid --compress value
+COMPRESSION="max"               # syncoid --compress value (set 'max' to auto-select highest available)
 BW_LIMIT="80M"                  # syncoid --target-bwlimit value (empty to disable)
 EXTRA_OPTS=()                    # space for any additional syncoid options (e.g. --sshoption='-o IPQoS=none')
 
@@ -20,7 +20,24 @@ mkdir -p "$(dirname "$LOG")"
 log() { printf '[%s] %s\n' "$(date -Is)" "$*" >>"$LOG"; }
 
 # Base syncoid options
-SYNCOID_BASE_OPTS=(--no-sync-snap "--compress=${COMPRESSION}")
+# Accepted values: gzip, pigz-fast, pigz-slow, zstd-fast, zstd-slow, lz4, xz, lzo (default)
+if [[ $COMPRESSION == max ]]; then
+  help_out="$(syncoid --help 2>&1 || true)"
+  for c in xz zstd-slow pigz-slow gzip zstd-fast pigz-fast lz4 lzo; do
+    if grep -Eiq "(compress[^\n]*\b${c}\b|--compress[ =]${c}\b)" <<<"$help_out"; then
+      COMPRESSION="$c"; break
+    fi
+  done
+  log "COMPRESSION_AUTOSELECT [VALUE=$COMPRESSION]"
+fi
+if [[ $COMPRESSION != max ]]; then
+  case "$COMPRESSION" in
+    gzip|pigz-fast|pigz-slow|zstd-fast|zstd-slow|lz4|xz|lzo) : ;; 
+    *) log "COMPRESSION_INVALID [VALUE=$COMPRESSION] [FALLBACK=lzo]"; COMPRESSION="lzo" ;; 
+  esac
+fi
+SYNCOID_BASE_OPTS=(--no-sync-snap)
+[[ -n $COMPRESSION && $COMPRESSION != max ]] && SYNCOID_BASE_OPTS+=("--compress=${COMPRESSION}")
 [[ -n ${BW_LIMIT} ]] && SYNCOID_BASE_OPTS+=("--target-bwlimit=${BW_LIMIT}")
 SYNCOID_BASE_OPTS+=("${EXTRA_OPTS[@]}")
 
