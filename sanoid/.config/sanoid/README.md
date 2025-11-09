@@ -33,7 +33,7 @@ ExecStart=/usr/bin/sanoid --take-snapshots --prune-snapshots --verbose --configd
 
 Retention is defined by templates in `sanoid.conf`:
 
-- `template_production`: frequent snapshots (`frequently=5` every `frequent_period=20` minutes), plus hourly(5) and daily(8). Monthly/yearly disabled.
+- `template_production`: frequent snapshots (`frequently=5` every `frequent_period=20` minutes), plus hourly(5), daily(8), and monthly(1). Yearly disabled.
 - `template_backup`: receives replicated snapshots only (`autosnap = no`), retains hourly(10), daily(8), monthly(6).
 - `template_scripts`: adds hook scripts; does not alter counts.
 
@@ -70,8 +70,8 @@ Replication workflow:
 2. After each snapshot, `post_snapshot_script` (`syncoid.sh`) runs.
 3. `syncoid.sh` loads list of datasets from `datasets.txt` (one per line, comments allowed) and replicates each to the remote pool, transforming `<source-pool>/...` to `<remote-pool>/...`.
 4. Compression (`COMPRESSION`), bandwidth cap (`BW_LIMIT`), and base flags (`--no-sync-snap`) are configured near the top of `syncoid.sh`.
-5. Transfers currently run sequentially; concurrency can be introduced by exporting a variable (e.g. `CONCURRENT=3`) and wrapping the loop to background jobs with a wait, or by piping the dataset list through `xargs -P <n> syncoid ...`. This is left manual to avoid overload by default.
-6. Failures and progress are logged in `/var/log/syncoid-post.log`.
+5. Transfers run with configurable concurrency (export `CONCURRENT=<n>`, default 2) using background jobs; adjust to avoid saturating network or I/O.
+6. Failures and progress are logged in `/var/log/syncoid-post.log` with tagged lines: `START [DATASET=...] [DEST=...]`, `SUCCESS ...`, `FAIL ...` for easy parsing.
 
 Adjusting bandwidth: set `BW_LIMIT=""` to remove cap or change value (e.g. `40M`).
 Adding concurrency example (edit script):
@@ -121,7 +121,7 @@ The setup runs via a systemd timer (`sanoid.timer`) which triggers every 15 minu
 
 ## Log Files
 
-Pruning operations are logged to `/var/log/sanoid-pruning.log`.
+Pruning operations are logged to `/var/log/sanoid-pruning.log` (ISO timestamps).
 
 ## Troubleshooting
 

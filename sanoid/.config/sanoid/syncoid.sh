@@ -55,14 +55,14 @@ start_replication() {
     log "Skipping unexpected dataset name '$ds' (does not start with zroot/)"; return 0
   fi
   local dest=${ds/zroot/$DEST_POOL}
-  log "START $ds -> $dest"
+  log "START [DATASET=$ds] [DEST=$dest]"
   # Launch syncoid in background; stdout/stderr already appended to LOG
   if syncoid "${SYNCOID_BASE_OPTS[@]}" "$ds" "$dest" >>"$LOG" 2>&1 & then
     RUN_PIDS+=("$!")
     RUN_SRC+=("$ds")
     RUN_DEST+=("$dest")
   else
-    log "FAIL_START $ds -> $dest"
+    log "FAIL_START [DATASET=$ds] [DEST=$dest]"
     fail=1
   fi
 }
@@ -72,9 +72,9 @@ wait_batch() {
   for i in "${!RUN_PIDS[@]}"; do
     pid=${RUN_PIDS[$i]}
     if wait "$pid"; then
-      log "SUCCESS ${RUN_SRC[$i]} -> ${RUN_DEST[$i]}"
+      log "SUCCESS [DATASET=${RUN_SRC[$i]}] [DEST=${RUN_DEST[$i]}]"
     else
-      log "FAIL ${RUN_SRC[$i]} -> ${RUN_DEST[$i]}"
+      log "FAIL [DATASET=${RUN_SRC[$i]}] [DEST=${RUN_DEST[$i]}]"
       fail=1
     fi
   done
