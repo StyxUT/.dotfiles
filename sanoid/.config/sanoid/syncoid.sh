@@ -97,9 +97,9 @@ done
 wait_batch
 
 if (( fail == 0 )); then
-  log "All replications completed successfully"
+  log "SUMMARY [STATUS=success] [TOTAL=${#DATASETS[@]}]"
 else
-  log "Replication completed with failures"
+  log "SUMMARY [STATUS=failures] [TOTAL=${#DATASETS[@]}]"
 fi
 
 exit "$fail"
