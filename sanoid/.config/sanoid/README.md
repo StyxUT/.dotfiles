@@ -58,12 +58,12 @@ The configuration uses several templates:
 
 Managed source datasets (recursive) in `sanoid.conf`:
 
-- `zroot/ROOT/arch_hyprland`
-- `zroot/data`
-- `zroot/usr`
+- `<source-pool>/<root-dataset>` (e.g. operating system root)
+- `<source-pool>/<primary-data>` (e.g. user data hierarchy)
+- Additional source datasets as required
 
 Remote backup root dataset:
-- `zfs-remote/data` (replicated copy; no local autosnap)
+- `<remote-pool>/<backup-root>` (replicated copy; no local autosnap)
 
 Replication workflow:
 1. Sanoid takes snapshots on source datasets via `template_production`.
@@ -78,7 +78,7 @@ Add or remove datasets by editing `datasets.txt` and ensuring corresponding entr
 
 ### Pruning Wrapper
 
-`pruning-wrapper.sh` runs the age-based prune script for each snapshot class. It currently also includes lines targeting an older backup pool path (`zfs-pool-WD1TB-1/zfs-backups`). Update those lines to point to `zfs-remote/data` (or remove if relying solely on Sanoid retention on the remote).
+`pruning-wrapper.sh` runs the age-based prune script for each snapshot class. Optional remote pruning lines are commented and can be enabled by setting a remote dataset variable in the script.
 
 The `pruning-wrapper.sh` script handles running the pruning script with different parameters for different snapshot types:
 
@@ -112,8 +112,8 @@ Pruning operations are logged to `/var/log/sanoid-pruning.log`.
 - Check `/var/log/syncoid-post.log` for per-dataset success/fail entries.
 - Ensure `datasets.txt` exists and is readable; script aborts otherwise.
 - Verify `syncoid` installed (`command -v syncoid`).
-- Manually dry-run a single dataset: `syncoid --no-sync-snap --dry-run zroot/data zfs-remote/data`.
-- Confirm destination pool and dataset names (`zfs list zfs-remote/data`).
+- Manually dry-run a single dataset: `syncoid --no-sync-snap --dry-run <source-pool>/<dataset> <remote-pool>/<dataset>`.
+- Confirm destination pool and dataset names (`zfs list <remote-pool>/<backup-root>`).
 
 
 If snapshots are not being pruned:

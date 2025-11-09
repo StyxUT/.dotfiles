@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 # Wrapper script to run multiple pruning commands
 
 # Log file
@@ -24,11 +25,16 @@ log "Pruning daily snapshots older than 5 weeks"
 log "Pruning monthly snapshots older than 2 years"
 /home/styxut/.config/sanoid/zfs-prune-snaphsots.sh -v -s '_monthly' 2y
 
-# Also prune snapshots in the backup location
-log "Pruning backup snapshots in zfs-pool-WD1TB-1/zfs-backups"
-/home/styxut/.config/sanoid/zfs-prune-snaphsots.sh -v -s '_frequently' 2d zfs-pool-WD1TB-1/zfs-backups
-/home/styxut/.config/sanoid/zfs-prune-snaphsots.sh -v -s '_hourly' 1w zfs-pool-WD1TB-1/zfs-backups
-/home/styxut/.config/sanoid/zfs-prune-snaphsots.sh -v -s '_daily' 5w zfs-pool-WD1TB-1/zfs-backups
-/home/styxut/.config/sanoid/zfs-prune-snaphsots.sh -v -s '_monthly' 2y zfs-pool-WD1TB-1/zfs-backups
+# Optional: prune replicated snapshots on remote target (disabled by default)
+# Uncomment and set REMOTE_DATASET to enable age-based pruning remotely.
+#REMOTE_DATASET="remote-pool/backup-root"
+#if [[ -n ${REMOTE_DATASET:-} ]]; then
+#  log "Pruning remote hourly snapshots older than 1 week on $REMOTE_DATASET"
+#  /home/styxut/.config/sanoid/zfs-prune-snaphsots.sh -v -s '_hourly' 1w "$REMOTE_DATASET"
+#  log "Pruning remote daily snapshots older than 5 weeks on $REMOTE_DATASET"
+#  /home/styxut/.config/sanoid/zfs-prune-snaphsots.sh -v -s '_daily' 5w "$REMOTE_DATASET"
+#  log "Pruning remote monthly snapshots older than 2 years on $REMOTE_DATASET"
+#  /home/styxut/.config/sanoid/zfs-prune-snaphsots.sh -v -s '_monthly' 2y "$REMOTE_DATASET"
+#fi
 
 log "Finished ZFS snapshot pruning"
