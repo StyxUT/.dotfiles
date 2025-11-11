@@ -34,7 +34,5 @@ log "Pruning monthly snapshots older than 2 years"
 #  log "Pruning remote daily snapshots older than 5 weeks on $REMOTE_DATASET"
 #  /home/styxut/.config/sanoid/zfs-prune-snaphsots.sh -v -s '_daily' 5w "$REMOTE_DATASET"
 #  log "Pruning remote monthly snapshots older than 2 years on $REMOTE_DATASET"
-#  /home/styxut/.config/sanoid/zfs-prune-snaphsots.sh -v -s '_monthly' 2y "$REMOTE_DATASET"
-#fi
-
+#  /home/styxut/.config/sanoid/zfs-prune-snaphsots.sh -v -s '_monthly' 2y "$REMOTE_DATASET"#
 log "Finished ZFS snapshot pruning"

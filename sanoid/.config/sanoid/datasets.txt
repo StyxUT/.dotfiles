@@ -1,0 +1,19 @@
+# List ZFS source datasets to replicate, one per line.
+# Example (uncomment and adjust as needed):
+# zroot/data
+# zroot/usr
+# zroot/ROOT/arch_hyprland
+# zroot/data/home
+#
+# Notes:
+# - Do not include trailing slashes.
+# - Child datasets can be omitted if you will use recursive replication.
+# - Lines starting with '#' are ignored.
+# - Use the exact dataset names as shown by `zfs list`.
+
+zroot/data
+zroot/usr
+zroot/ROOT/arch_hyprland
+zroot/ROOT/arch
+zroot/var/Projects
+zroot/var/.pyenv
