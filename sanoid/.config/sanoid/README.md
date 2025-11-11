@@ -70,7 +70,7 @@ Replication workflow:
 2. After each snapshot, `post_snapshot_script` (`syncoid.sh`) runs.
 3. `syncoid.sh` loads list of datasets from `datasets.txt` (one per line, comments allowed) and replicates each to the remote pool, transforming `<source-pool>/...` to `<remote-pool>/...`.
 4. Compression (`COMPRESSION`), bandwidth cap (`BW_LIMIT`), and base flags (`--no-sync-snap`) are configured near the top of `syncoid.sh`. Setting `COMPRESSION=max` auto-selects highest supported in order: xz > zstd-slow > pigz-slow > gzip > zstd-fast > pigz-fast > lz4 > lzo, logging `COMPRESSION_AUTOSELECT`. Use `COMPRESSION=none` to disable syncoid stream compression entirely. Unsupported explicit values fall back to lzo.
-5. Transfers run with configurable concurrency (export `CONCURRENT=<n>`, default 2) using background jobs; adjust to avoid saturating network or I/O.
+5. Transfers run with configurable concurrency (`CONCURRENT` set near top of syncoid.sh, default 1) using background jobs; adjust to avoid saturating network or I/O.
 6. Failures and progress are logged in `/var/log/syncoid-post.log` with tagged lines: `START [DATASET=...] [DEST=...]`, `SUCCESS ... [DURATION=Ns]`, `FAIL ... [DURATION=Ns]`, and a final `SUMMARY [STATUS=success|failures] [TOTAL=N]` for easy parsing.
 
 Adjusting bandwidth: set `BW_LIMIT=""` to remove cap or change value (e.g. `40M`).
