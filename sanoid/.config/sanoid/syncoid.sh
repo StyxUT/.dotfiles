@@ -11,7 +11,8 @@ flock -n 9 || exit 0
 # Configuration (adjust as needed)
 DEST_POOL="zfs-backups"          # Remote root/pool name (update if different)
 COMPRESSION="none"              # syncoid --compress value; set 'max' to auto-select; 'none' for no compression
-BW_LIMIT="80M"                  # syncoid --target-bwlimit value (empty to disable)
+BW_LIMIT="90M"                  # syncoid --target-bwlimit value (empty to disable)
+CONCURRENT="1"                  # number of simultaneous syncoid processes (override via env CONCURRENT)
 AUTOCREATE_DEST="1"             # If set to 1, auto-create missing destination parent datasets
 EXTRA_OPTS=()                    # space for any additional syncoid options (e.g. --sshoption='-o IPQoS=none')
 : "${FORCE_DELETE_TARGET:=0}"    # set to 1 to append --force-delete for mismatched targets
@@ -68,8 +69,7 @@ if ! command -v syncoid >/dev/null 2>&1; then
   log "syncoid not found in PATH"; exit 1
 fi
 
-# Concurrency (number of simultaneous syncoid processes); default 2
-CONCURRENT="${CONCURRENT:-2}"
+
 
 RUN_PIDS=()
 RUN_SRC=()
