@@ -11,8 +11,8 @@
 # - Lines starting with '#' are ignored.
 # - Use the exact dataset names as shown by `zfs list`.
 
-zroot/data
-zroot/usr
+zroot/data/home
+zroot/usr/local
 zroot/ROOT/arch_hyprland
 zroot/ROOT/arch
 zroot/var/Projects

@@ -92,6 +92,40 @@ wait
 
 Add or remove datasets by editing `datasets.txt` and ensuring corresponding entries exist in `sanoid.conf`.
 
+### Snapshot Replication Gating
+
+The replication script `syncoid.sh` now supports snapshot class gating so that only less frequent snapshots (e.g. daily, monthly) are replicated by default, reducing churn and iSCSI connect cycles.
+
+Environment variables (set before invoking Sanoid, or exporting in the systemd unit):
+
+- `REPLICATE_SNAP_CLASSES` (default: `daily monthly`)
+  Space‑separated list of allowed snapshot class suffixes. A snapshot name like `autosnap_2025-11-14_03:15:00_daily` yields class `daily`.
+  Examples: `REPLICATE_SNAP_CLASSES="daily"` (replicate only dailies), `REPLICATE_SNAP_CLASSES="daily monthly"` (default), `REPLICATE_SNAP_CLASSES="hourly daily monthly"` (include hourlies).
+- `REPLICATE_FORCE` (default: `0`)
+  Set to `1` to bypass class filtering and replicate on every invocation regardless of snapshot type.
+
+Snapshot name detection:
+- The script looks for the first defined of: `SNAPSHOT_NAME`, `SANOID_SNAP_NAME`, `SANOID_SNAPNAME` (covers common Sanoid env names). If none are found replication proceeds (conservative) and logs `SNAPSHOT_NAME_MISSING_REPLICATE`.
+- Class extraction: final underscore segment after the timestamp (regex `_([a-zA-Z]+)$`). If parsing fails replication proceeds (logs `SNAPSHOT_NAME_PARSE_FAIL`).
+
+Log tags added:
+- `SNAPSHOT_CLASS_ALLOWED [NAME=...] [CLASS=...]` when proceeding.
+- `SKIP_SNAPSHOT_CLASS [NAME=...] [CLASS=...] [ALLOWED='...']` when exiting early (no iSCSI work performed).
+- `REPLICATE_FORCE_ENABLED` when force override active.
+
+To replicate hourlies as well: export `REPLICATE_SNAP_CLASSES="hourly daily monthly"`.
+To test quickly, manually export a snapshot name then run the script:
+```bash
+export SNAPSHOT_NAME="autosnap_$(date +%Y-%m-%d_%H:%M:%S)_frequently"
+/home/styxut/.config/sanoid/syncoid.sh  # should exit early and log SKIP_SNAPSHOT_CLASS
+```
+```bash
+export SNAPSHOT_NAME="autosnap_$(date +%Y-%m-%d_%H:%M:%S)_daily"
+/home/styxut/.config/sanoid/syncoid.sh  # should proceed with replication
+```
+
+Adjust gating without editing the script by changing the environment in the systemd unit or wrapper.
+
 ## Scripts
 
 ### Pruning Wrapper

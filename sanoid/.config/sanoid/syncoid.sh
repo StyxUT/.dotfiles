@@ -16,6 +16,55 @@ CONCURRENT="1"                  # number of simultaneous syncoid processes (over
 AUTOCREATE_DEST="1"             # If set to 1, auto-create missing destination parent datasets
 EXTRA_OPTS=()                    # space for any additional syncoid options (e.g. --sshoption='-o IPQoS=none')
 : "${FORCE_DELETE_TARGET:=0}"    # set to 1 to append --force-delete for mismatched targets
+: "${REPLICATE_SNAP_CLASSES:=daily monthly}"  # space-separated allowed classes (suffixes)
+: "${REPLICATE_FORCE:=0}"                    # set 1 to force replication regardless of snapshot class
+
+# Snapshot class gating (skip frequently/hourly unless allowed)
+select_snapshot_name() {
+  local v
+  for v in SNAPSHOT_NAME SANOID_SNAP_NAME SANOID_SNAPNAME; do
+    if [[ -n "${!v:-}" ]]; then
+      echo "${!v}"; return 0
+    fi
+  done
+  return 1
+}
+should_replicate() {
+  local name class allowed
+  if [[ ${REPLICATE_FORCE} == 1 ]]; then
+    log "REPLICATE_FORCE_ENABLED"; return 0
+  fi
+  name=$(select_snapshot_name || true)
+  if [[ -z $name ]]; then
+    # If no name supplied, be conservative and replicate
+    log "SNAPSHOT_NAME_MISSING_REPLICATE"; return 0
+  fi
+  if [[ $name =~ _([a-zA-Z]+)$ ]]; then
+    class="${BASH_REMATCH[1]}"
+  else
+    log "SNAPSHOT_NAME_PARSE_FAIL [NAME=$name]"; return 0
+  fi
+  for allowed in $REPLICATE_SNAP_CLASSES; do
+    if [[ $class == "$allowed" ]]; then
+      log "SNAPSHOT_CLASS_ALLOWED [NAME=$name] [CLASS=$class]"; return 0
+    fi
+  done
+  log "SKIP_SNAPSHOT_CLASS [NAME=$name] [CLASS=$class] [ALLOWED='$REPLICATE_SNAP_CLASSES']"; return 1
+}
+if ! should_replicate; then
+  exit 0
+fi
+
+# iSCSI / pool import configuration
+: "${ISCSI_ENABLE:=1}"          # set 0 to disable iSCSI workflow
+: "${ISCSI_TARGET_IQN:=iqn.2000-01.com.synology:Synology.default-target.f81f38e3406}"       # e.g. iqn.2025-11.com.example:backup
+: "${ISCSI_PORTAL:=synology.home}"           # e.g. 192.0.2.10:3260
+: "${ISCSI_DEVICE_WAIT:=60}"    # seconds to wait for pool import availability
+: "${ISCSI_EXPORT_ON_EXIT:=1}"  # export pool we imported on exit
+: "${ISCSI_LOGOUT_ON_EXIT:=1}"  # logout iSCSI session on exit
+
+POOL_IMPORTED_FLAG=0             # will be set to 1 if we import the pool here
+ISCSI_LOGGED_IN=0
 
 LOG="/var/log/syncoid-post.log"
 mkdir -p "$(dirname "$LOG")"
@@ -27,6 +76,94 @@ if [[ -z "${HOME:-}" ]]; then
   export HOME="/root"
   log "HOME_DEFAULT_APPLIED [VALUE=$HOME]"
 fi
+
+iscsi_login() {
+  if [[ ${ISCSI_ENABLE} != 1 ]]; then
+    return 0
+  fi
+  if [[ -z $ISCSI_TARGET_IQN || -z $ISCSI_PORTAL ]]; then
+    log "ISCSI_CONFIG_MISSING [TARGET_IQN=$ISCSI_TARGET_IQN] [PORTAL=$ISCSI_PORTAL]"
+    return 1
+  fi
+  if ! command -v iscsiadm >/dev/null 2>&1; then
+    log "ISCSIADM_NOT_FOUND"; return 1
+  fi
+  # Conditional discovery only if node entry missing
+  if ! iscsiadm -m node -T "$ISCSI_TARGET_IQN" -p "$ISCSI_PORTAL" -o show >/dev/null 2>&1; then
+    log "ISCSI_DISCOVERY [PORTAL=$ISCSI_PORTAL]"
+    if ! iscsiadm -m discovery -t sendtargets -p "$ISCSI_PORTAL" >>"$LOG" 2>&1; then
+      log "ISCSI_DISCOVERY_FAIL [PORTAL=$ISCSI_PORTAL]"; return 1
+    fi
+  fi
+  log "ISCSI_LOGIN [TARGET=$ISCSI_TARGET_IQN] [PORTAL=$ISCSI_PORTAL]"
+  if iscsiadm -m node -T "$ISCSI_TARGET_IQN" -p "$ISCSI_PORTAL" --login >>"$LOG" 2>&1; then
+    ISCSI_LOGGED_IN=1
+    log "ISCSI_LOGIN_SUCCESS [TARGET=$ISCSI_TARGET_IQN]"
+  else
+    log "ISCSI_LOGIN_FAIL [TARGET=$ISCSI_TARGET_IQN]"
+    return 1
+  fi
+}
+
+iscsi_logout() {
+  if [[ ${ISCSI_ENABLE} != 1 || ${ISCSI_LOGGED_IN} != 1 ]]; then
+    return 0
+  fi
+  log "ISCSI_LOGOUT [TARGET=$ISCSI_TARGET_IQN] [PORTAL=$ISCSI_PORTAL]"
+  if iscsiadm -m node -T "$ISCSI_TARGET_IQN" -p "$ISCSI_PORTAL" --logout >>"$LOG" 2>&1; then
+    log "ISCSI_LOGOUT_SUCCESS [TARGET=$ISCSI_TARGET_IQN]"
+  else
+    log "ISCSI_LOGOUT_FAIL [TARGET=$ISCSI_TARGET_IQN]"
+  fi
+}
+
+ensure_pool_import() {
+  if [[ ${ISCSI_ENABLE} != 1 ]]; then
+    return 0
+  fi
+  # If pool already imported we skip import
+  if zpool list -H -o name "$DEST_POOL" >/dev/null 2>&1; then
+    log "POOL_ALREADY_IMPORTED [POOL=$DEST_POOL]"
+    return 0
+  fi
+  log "POOL_IMPORT_ATTEMPT [POOL=$DEST_POOL] [WAIT=$ISCSI_DEVICE_WAIT]"
+  local i
+  for (( i=1; i<=ISCSI_DEVICE_WAIT; i++ )); do
+    if zpool import | grep -Eq "^\s+pool: ${DEST_POOL}\b"; then
+      if zpool import -N -f "$DEST_POOL" >>"$LOG" 2>&1; then
+        POOL_IMPORTED_FLAG=1
+        log "POOL_IMPORT_SUCCESS [POOL=$DEST_POOL] [SECONDS=$i]"
+        return 0
+      else
+        log "POOL_IMPORT_CMD_FAIL [POOL=$DEST_POOL]"; return 1
+      fi
+    fi
+    sleep 1
+  done
+  log "POOL_IMPORT_TIMEOUT [POOL=$DEST_POOL] [SECONDS=$ISCSI_DEVICE_WAIT]"
+  return 1
+}
+
+cleanup() {
+  local status=$?
+  if [[ $status -ne 0 ]]; then
+    log "SCRIPT_EXIT_WITH_ERROR [CODE=$status]"
+  fi
+  if [[ ${POOL_IMPORTED_FLAG} == 1 && ${ISCSI_EXPORT_ON_EXIT} == 1 ]]; then
+    if zpool list -H -o name "$DEST_POOL" >/dev/null 2>&1; then
+      log "POOL_EXPORT [POOL=$DEST_POOL]"
+      if zpool export "$DEST_POOL" >>"$LOG" 2>&1; then
+        log "POOL_EXPORT_SUCCESS [POOL=$DEST_POOL]"
+      else
+        log "POOL_EXPORT_FAIL [POOL=$DEST_POOL]"
+      fi
+    fi
+  fi
+  if [[ ${ISCSI_LOGOUT_ON_EXIT} == 1 ]]; then
+    iscsi_logout || true
+  fi
+}
+trap cleanup EXIT
 
 # Base syncoid options
 # Accepted values: gzip, pigz-fast, pigz-slow, zstd-fast, zstd-slow, lz4, xz, lzo (default)
@@ -51,6 +188,18 @@ SYNCOID_BASE_OPTS=(--no-sync-snap)
 SYNCOID_BASE_OPTS+=("${EXTRA_OPTS[@]}")
 [[ $FORCE_DELETE_TARGET == 1 ]] && SYNCOID_BASE_OPTS+=("--force-delete")
 
+# iSCSI connect + pool import (fail-fast if enabled and unsuccessful)
+if ! iscsi_login; then
+  if [[ ${ISCSI_ENABLE} == 1 ]]; then
+    log "ABORT_ISCSI_LOGIN_FAIL"; exit 1
+  fi
+fi
+if ! ensure_pool_import; then
+  if [[ ${ISCSI_ENABLE} == 1 ]]; then
+    log "ABORT_POOL_IMPORT_FAIL"; exit 1
+  fi
+fi
+
 # Load dataset list dynamically from datasets.txt (ignore comments / blanks)
 DATASET_FILE="/home/styxut/.dotfiles/sanoid/.config/sanoid/datasets.txt"
 if [[ -r "$DATASET_FILE" ]]; then
@@ -68,8 +217,6 @@ log "Starting syncoid replication for ${#DATASETS[@]} datasets"
 if ! command -v syncoid >/dev/null 2>&1; then
   log "syncoid not found in PATH"; exit 1
 fi
-
-
 
 RUN_PIDS=()
 RUN_SRC=()
@@ -141,8 +288,8 @@ wait_batch() {
   done
   RUN_PIDS=()
   RUN_SRC=()
-RUN_DEST=()
-RUN_START=()
+  RUN_DEST=()
+  RUN_START=()
 }
 
 for ds in "${DATASETS[@]}"; do
@@ -165,3 +312,4 @@ else
 fi
 
 exit "$fail"
+
