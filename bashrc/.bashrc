@@ -8,8 +8,8 @@ export EDITOR=/usr/bin/vim
 
 # ollama
 export OLLAMA_HOST=0.0.0.0
-export HIP_VISIBLE_DEVICES=0
-export CUDA_VISIBLE_DEVICES=-1  # hide NVIDIA devices
+export HIP_VISIBLE_DEVICES=1
+#export CUDA_VISIBLE_DEVICES=-1  # hide NVIDIA devices
 export OLLAMA_LLAMA_EXTRA_ARGS="--flash-attn"  #use Flash Attention
 # gaming
 export DRI_PRIME=1
