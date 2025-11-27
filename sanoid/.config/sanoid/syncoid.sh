@@ -19,6 +19,11 @@ EXTRA_OPTS=()                    # space for any additional syncoid options (e.g
 : "${REPLICATE_SNAP_CLASSES:=daily monthly}"  # space-separated allowed classes (suffixes)
 : "${REPLICATE_FORCE:=0}"                    # set 1 to force replication regardless of snapshot class
 
+LOG="/var/log/syncoid-post.log"
+mkdir -p "$(dirname "$LOG")"
+
+log() { printf '[%s] %s\n' "$(date -Is)" "$*" >>"$LOG"; }
+
 # Snapshot class gating (skip frequently/hourly unless allowed)
 select_snapshot_name() {
   local v
@@ -65,11 +70,6 @@ fi
 
 POOL_IMPORTED_FLAG=0             # will be set to 1 if we import the pool here
 ISCSI_LOGGED_IN=0
-
-LOG="/var/log/syncoid-post.log"
-mkdir -p "$(dirname "$LOG")"
-
-log() { printf '[%s] %s\n' "$(date -Is)" "$*" >>"$LOG"; }
 
 # Suppress mbuffer HOME warning: define HOME if unset
 if [[ -z "${HOME:-}" ]]; then
