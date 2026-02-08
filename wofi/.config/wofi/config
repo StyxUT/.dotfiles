@@ -1,11 +1,11 @@
 allow_images=true
 allow_markup=true
-height=400
-width=600
+height=600
+width=800
 hide_scroll=true
 monitor=DP-2
 key_up=k
 key_down=j
 key_exit=Super_L
-
+mode=drun
 drun-display_generic=true
