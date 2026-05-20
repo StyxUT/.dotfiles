@@ -6,26 +6,16 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "Ollama (local)",
       "options": {
-        "baseURL": "http://localhost:11434/v1"
+        "baseURL": "http://arch.home:11434/v1"
       },
       "models": {
-	       	"qwen3-coder:30b-ctx80K": {
-	       		"name": "qwen3-coder:30b-ctx80K",
-					"reasoning": true,
-			 		"tools": true
-	       	 },
-        "qwen3.5:27b": {
-          "name": "qwen3.5:27b",
-					"reasoning": true,
-					"tools": true
-        },
-        "qwen3.5:27b-ctx80K": {
-          "name": "qwen3.5:27b-ctx80K",
-					"reasoning": true,
-					"tools": true
-        },
         "qwen3.6:27b": {
           "name": "qwen3.6:27b",
+					"reasoning": true,
+					"tools": true
+        },
+        "qwen3.6:27b-ctx8K": {
+          "name": "qwen3.6:27b-ctx8K",
 					"reasoning": true,
 					"tools": true
         },
@@ -43,17 +33,7 @@
           "name": "qwen3.6:27b-ctx100K",
 					"reasoning": true,
 					"tools": true
-        },
-        "devstral-small-2:24b_ctx80K": {
-          "name": "devstral-small-2:24b_ctx80K",
-					"reasoning": true,
-					"tools": true
-        },
-        "gpt-oss:20b": {
-          "name": "gpt-oss:20b",
-					"reasoning": true,
-					"tools": true
-       }
+        }
       }
     }
   }
