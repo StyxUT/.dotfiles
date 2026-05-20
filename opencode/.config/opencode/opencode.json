@@ -29,6 +29,11 @@
 					"reasoning": true,
 					"tools": true
         },
+        "qwen3.6:27b-ctx32K": {
+          "name": "qwen3.6:27b-ctx32K",
+					"reasoning": true,
+					"tools": true
+        },
         "qwen3.6:27b-ctx64K": {
           "name": "qwen3.6:27b-ctx64K",
 					"reasoning": true,
