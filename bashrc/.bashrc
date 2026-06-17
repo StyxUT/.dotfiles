@@ -6,6 +6,8 @@ export HOME=/home/styxut
 export KUBECONFIG=~/.kube/k3s.yaml
 export EDITOR=/usr/bin/vim
 
+source ~/.config/openbrain.env
+
 # ollama
 export OLLAMA_HOST=0.0.0.0
 export HIP_VISIBLE_DEVICES=1
