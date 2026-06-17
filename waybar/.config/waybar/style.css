@@ -13,37 +13,47 @@
 /* -----------------------------------------------------
  * Import Pywal colors 
  * ----------------------------------------------------- */
-/* @import 'style-light.css'; */
-@define-color backgroundlight #FFFFFF;
-@define-color backgrounddark #FFFFFF;
-@define-color workspacesbackground1 #FFFFFF;
-@define-color workspacesbackground2 #CCCCCC;
-@define-color bordercolor #FFFFFF;
-@define-color textcolor1 #000000;
-@define-color textcolor2 #000000;
-@define-color textcolor3 #FFFFFF;
-@define-color iconcolor #FFFFFF;
+/* Derived from kitty Bright-Slate plus Hyprland borders */
+@define-color backgroundlight rgba(15, 55, 84, 0.92);
+@define-color backgrounddark rgba(33, 33, 33, 0.88);
+@define-color workspacesbackground1 #212121;
+@define-color workspacesbackground2 #25dacc;
+@define-color bordercolor #33ccff;
+@define-color textcolor #e0e0e0;
+@define-color textcolor1 #212121;
+@define-color textcolor2 #e0e0e0;
+@define-color textcolor3 #34b0d2;
+@define-color iconcolor #80d7ff;
+@define-color accentgreen #00ff99;
+@define-color accentcyan #33ccff;
+@define-color warning #e1a7bf;
 
 /* -----------------------------------------------------
  * General 
  * ----------------------------------------------------- */
 
 * {
-    font-family: "Fira Sans semibold", FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+    font-family: "Fira Sans Semibold", "Symbols Nerd Font", "NotoSansM Nerd Font Mono", "Font Awesome 7 Free Solid", Roboto, Helvetica, Arial, sans-serif;
     border: none;
     border-radius: 0px;
+    font-size: 13px;
 }
 
 window#waybar {
-    background-color: rgba(0,0,0,0.4);
-    border-bottom: 0px solid #ffffff;
-    /* color: #FFFFFF; */
+    background: linear-gradient(90deg, rgba(33, 33, 33, 0.96), rgba(15, 55, 84, 0.92));
+    border-bottom: 2px solid @bordercolor;
+    color: @textcolor;
     transition-property: background-color;
     transition-duration: .5s;
 }
 
 .modules-left {
-    padding-left: 10px;
+    padding-left: 6px;
+}
+
+.modules-center,
+.modules-right {
+    padding-right: 6px;
 }
 
 /* -----------------------------------------------------
@@ -51,23 +61,28 @@ window#waybar {
  * ----------------------------------------------------- */
 
  #workspaces {
-    margin: 3px 7px 3px 3px;
+    margin: 4px 6px 4px 0px;
     border: 0px;
     font-size: 14px;
-    color: @textcolor1;
+    color: @textcolor;
+    padding: 2px 4px;
+    background-color: rgba(15, 55, 84, 0.42);
+    border-radius: 999px;
 }
 
 #workspaces button {
     border: 0px;
-    margin:4px 5px 4px 0px;
-    padding:0px 4px 0px 4px;
+    margin: 0px 3px;
+    padding: 1px 9px;
     color: @textcolor3;
     transition: all 0.5s ease-in-out;
+    border-radius: 999px;
 }
 
 #workspaces button.active {
     color: @textcolor1;
-    background: @workspacesbackground2;
+    background: linear-gradient(90deg, @accentcyan, @accentgreen);
+    border-radius: 15px;
 }
 
 #workspaces button:hover {
@@ -83,8 +98,9 @@ window#waybar {
 tooltip {
     border-radius: 10px;
     background-color: @backgroundlight;
-    opacity:0.8;
-    padding:20px;
+    border: 1px solid @bordercolor;
+    opacity: 0.95;
+    padding: 20px;
     margin:0px;
 }
 
@@ -97,11 +113,13 @@ tooltip label {
  * ----------------------------------------------------- */
 
 #window {
-    margin: 0px 15px 0px 0px;
+    margin: 4px 8px 4px 0px;
     border-radius: 12px;
     color:@textcolor;
-    font-size:14px;
+    font-size: 13px;
     font-weight:normal;
+    padding: 0px 10px;
+    background-color: rgba(15, 55, 84, 0.55);
 }
 
 window#waybar.empty #window {
@@ -244,9 +262,12 @@ window#waybar.empty #window {
  * ----------------------------------------------------- */
 
 #custom-appmenuicon {
-    font-size: 20px;
-    color: @textcolor;
-    margin: 0px 15px 0px 0px;
+    font-size: 18px;
+    color: @iconcolor;
+    margin: 4px 6px 4px 0px;
+    padding: 0px 10px 0px 8px;
+    border-radius: 999px;
+    background-color: rgba(15, 55, 84, 0.55);
 }
 
 /* -----------------------------------------------------
@@ -314,9 +335,13 @@ window#waybar.empty #window {
  * ----------------------------------------------------- */
 
 #clock {
-    font-size: 15px;
+    font-size: 13px;
     color: @textcolor;
-    margin: 0px 15px 0px 0px;
+    margin: 4px 6px;
+    padding: 0px 12px;
+    font-weight: bold;
+    border-radius: 999px;
+    background-color: rgba(15, 55, 84, 0.55);
 }
 
 /* -----------------------------------------------------
@@ -336,14 +361,16 @@ window#waybar.empty #window {
  * ----------------------------------------------------- */
 
  #pulseaudio {
-    font-size: 14px;
+    font-size: 13px;
     color: @textcolor;
-    border-radius: 15px;
-    margin: 0px 15px 0px 0px;
+    border-radius: 999px;
+    margin: 4px 6px 4px 0px;
+    padding: 0px 12px;
+    background-color: rgba(15, 55, 84, 0.55);
 }
 
 #pulseaudio.muted {
-    color: @textcolor;
+    color: @warning;
 }
 
 /* -----------------------------------------------------
@@ -351,10 +378,19 @@ window#waybar.empty #window {
  * ----------------------------------------------------- */
 
 #network {
-    font-size: 14px;
+    font-size: 13px;
     color: @textcolor;
-    border-radius: 15px;
-    margin: 0px 15px 0px 0px;
+    border-radius: 999px;
+    margin: 4px 6px 4px 0px;
+    padding: 0px 12px;
+    background-color: rgba(15, 55, 84, 0.55);
+}
+
+#custom-calculator {
+    margin: 4px 6px 4px 0px;
+    padding: 0px 10px;
+    border-radius: 999px;
+    background-color: rgba(15, 55, 84, 0.55);
 }
 
 #network.ethernet {
@@ -362,7 +398,11 @@ window#waybar.empty #window {
 }
 
 #network.wifi {
-    color: @textcolor;
+    color: @iconcolor;
+}
+
+#network.disconnected {
+    color: @warning;
 }
 
 /* -----------------------------------------------------
@@ -394,7 +434,7 @@ window#waybar.empty #window {
 }
 
 #battery.charging, #battery.plugged {
-    color: @textcolor;
+    color: @accentgreen;
 }
 
 @keyframes blink {
@@ -405,7 +445,7 @@ window#waybar.empty #window {
 }
 
 #battery.critical:not(.charging) {
-    color: #f53c3c;
+    color: @warning;
     animation-name: blink;
     animation-duration: 0.5s;
     animation-timing-function: linear;

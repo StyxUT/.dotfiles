@@ -20,30 +20,52 @@ sleep 0.5
 # -----------------------------------------------------
 
 echo ":: Reload ags"
-ags quit &
-sleep 0.2
-ags run &
+if command -v ags >/dev/null 2>&1; then
+    ags quit &
+    sleep 0.2
+    ags run &
+fi
 
 # ----------------------------------------------------- 
 # Default theme: /THEMEFOLDER;/VARIATION
+# Prefer the local top-level config/style and only use an
+# external theme selection when the ML4W settings exist.
 # ----------------------------------------------------- 
-themestyle="/ml4w;/ml4w/light"
+themestyle="local"
 
 # ----------------------------------------------------- 
 # Get current theme information from ~/.config/ml4w/settings/waybar-theme.sh
 # ----------------------------------------------------- 
 if [ -f ~/.config/ml4w/settings/waybar-theme.sh ]; then
     themestyle=$(cat ~/.config/ml4w/settings/waybar-theme.sh)
-else
+elif [ -d ~/.config/ml4w/settings ]; then
+    themestyle="/ml4w;/ml4w/light"
     touch ~/.config/ml4w/settings/waybar-theme.sh
     echo "$themestyle" > ~/.config/ml4w/settings/waybar-theme.sh
 fi
 
-IFS=';' read -ra arrThemes <<< "$themestyle"
-echo ":: Theme: ${arrThemes[0]}"
+theme_config="$HOME/.config/waybar/config"
+theme_style="$HOME/.config/waybar/style.css"
 
-if [ ! -f ~/.config/waybar/themes${arrThemes[1]}/style.css ]; then
-    themestyle="/ml4w;/ml4w/light"
+if [ "$themestyle" != "local" ]; then
+    IFS=';' read -ra arrThemes <<< "$themestyle"
+    echo ":: Theme: ${arrThemes[0]}"
+    theme_config="$HOME/.config/waybar/themes${arrThemes[0]}/config"
+    theme_style="$HOME/.config/waybar/themes${arrThemes[1]}/style.css"
+    if [ ! -f "$theme_style" ]; then
+        themestyle="/ml4w;/ml4w/light"
+        IFS=';' read -ra arrThemes <<< "$themestyle"
+        theme_config="$HOME/.config/waybar/themes${arrThemes[0]}/config"
+        theme_style="$HOME/.config/waybar/themes${arrThemes[1]}/style.css"
+    fi
+
+    if [ ! -f "$theme_style" ] || grep -q '\.cache/wal/colors-waybar\.css' "$theme_style" && [ ! -f "$HOME/.cache/wal/colors-waybar.css" ]; then
+        echo ":: Falling back to local config/style"
+        theme_config="$HOME/.config/waybar/config"
+        theme_style="$HOME/.config/waybar/style.css"
+    fi
+else
+    echo ":: Theme: local"
 fi
 
 # ----------------------------------------------------- 
@@ -53,15 +75,22 @@ config_file="config"
 style_file="style.css"
 
 # Standard files can be overwritten with an existing config-custom or style-custom.css
-if [ -f ~/.config/waybar/themes${arrThemes[0]}/config-custom ] ;then
+if [ "$themestyle" != "local" ] && [ "$theme_config" = "$HOME/.config/waybar/themes${arrThemes[0]}/config" ] && [ -f ~/.config/waybar/themes${arrThemes[0]}/config-custom ] ;then
     config_file="config-custom"
 fi
-if [ -f ~/.config/waybar/themes${arrThemes[1]}/style-custom.css ] ;then
+if [ "$themestyle" != "local" ] && [ "$theme_style" = "$HOME/.config/waybar/themes${arrThemes[1]}/style.css" ] && [ -f ~/.config/waybar/themes${arrThemes[1]}/style-custom.css ] ;then
     style_file="style-custom.css"
+fi
+
+if [ "$themestyle" != "local" ] && [ "$theme_config" = "$HOME/.config/waybar/themes${arrThemes[0]}/config" ]; then
+    theme_config="$HOME/.config/waybar/themes${arrThemes[0]}/$config_file"
+fi
+
+if [ "$themestyle" != "local" ] && [ "$theme_style" = "$HOME/.config/waybar/themes${arrThemes[1]}/style.css" ]; then
+    theme_style="$HOME/.config/waybar/themes${arrThemes[1]}/$style_file"
 fi
 
 # Check if waybar-disabled file exists
 if [ ! -f $HOME/.cache/waybar-disabled ] ;then 
-    waybar -c ~/.config/waybar/themes${arrThemes[0]}/$config_file -s ~/.config/waybar/themes${arrThemes[1]}/$style_file &
+    waybar -c "$theme_config" -s "$theme_style" &
 fi
-

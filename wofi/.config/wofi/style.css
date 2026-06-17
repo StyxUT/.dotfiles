@@ -11,26 +11,25 @@ expander list #img {
 }
 
 #input {
-   border: 5px solid;
-   background: linear-gradient(90deg, rgba(00,00,00,.9), rgba(55,88,88,.0));
+   border: 2px solid #33ccff;
+   background: linear-gradient(90deg, rgba(33, 33, 33, 0.96), rgba(15, 55, 84, 0.92));
    margin: 5px;
    border-radius: 20px;
-   border-color: rgba(00,99,99,1);
-   color: white;
+   color: #e0e0e0;
 }
 
 #window {
-   border: 5px dash #007599;
+   border: 2px dashed #33ccff;
    border-radius: 20px;
-   font-size: 20:px;
-   background-color: rgba(00,00,95,.0);
-   color: white;
+   font-size: 20px;
+   background-color: rgba(33, 33, 33, 0.88);
+   color: #e0e0e0;
    margin:5px;
 }
 
 #entry:selected{
-	background-color: rgba(22,41,61,.9);
-	background: linear-gradient(90deg, #119988, rgba(00,44,99,.0))
+	background-color: rgba(15, 55, 84, 0.92);
+	background: linear-gradient(90deg, #33ccff, #00ff99);
 }
 
 
@@ -40,18 +39,18 @@ expander list #img {
 }
 
 #scroll{
-	background: linear-gradient(rgba(00,71,91,.8), rgba(99,99,99,.0));
+	background: linear-gradient(rgba(15, 55, 84, 0.82), rgba(33, 33, 33, 0.35));
 	border-radius: 15px;
 	border:5px;
 	margin:5px;
 }
 
 #outer-box{
-	background-color: rgba(88,88,88,.0);
+	background-color: rgba(33, 33, 33, 0.12);
 	border-radius: 15px;
 	margin:10px;
 }
 
 #text:selected{
-	color: white;
+	color: #212121;
 }

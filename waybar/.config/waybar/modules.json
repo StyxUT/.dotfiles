@@ -53,28 +53,9 @@
     "separate-outputs": true
   },
 
-  // ML4W Welcome App
-  "custom/ml4w-welcome": {
-    "on-click": "sleep 0.1 && ~/.config/ml4w/settings/ml4w-sidebar.sh",
-    "on-click-right": "sleep 0.1 && com.ml4w.welcome",
-    "format": " ",
-    "tooltip-format": "Open Sidebar"
-  },
-
   // Empty
   "custom/empty": {
     "format": ""
-  },
-
-  // Updates Count
-  "custom/updates": {
-    "format": "  {}",
-    "escape": true,
-    "return-type": "json",
-    "exec": "~/.config/ml4w/scripts/updates.sh",
-    "interval": 1800,
-    "on-click": "$(cat ~/.config/ml4w/settings/terminal.sh) --class dotfiles-floating -e ~/.config/ml4w/scripts/installupdates.sh",
-    "on-click-right": "~/.config/ml4w/settings/software.sh"
   },
 
   // Calculator
@@ -112,7 +93,7 @@
   // Power Menu
   "custom/exit": {
     "format": "",
-    "on-click": "~/.config/ml4w/scripts/wlogout.sh",
+    "on-click": "wlogout",
     "tooltip-format": "Power Menu"
   },
 
@@ -162,22 +143,19 @@
 
   // CPU
   "cpu": {
-    "format": "/ C {usage}% ",
-    "on-click": "~/.config/ml4w/settings/system-monitor.sh"
+    "format": "/ C {usage}% "
   },
 
   // Memory
   "memory": {
-    "format": "/ M {}% ",
-    "on-click": "~/.config/ml4w/settings/system-monitor.sh"
+    "format": "/ M {}% "
   },
 
   // Harddisc space used
   "disk": {
     "interval": 30,
     "format": "D {percentage_used}% ",
-    "path": "/",
-    "on-click": "~/.config/ml4w/settings/system-monitor.sh"
+    "path": "/"
   },
 
   "hyprland/language": {
@@ -238,15 +216,16 @@
   // Network
   "network": {
     "format": "{ifname}",
-    "format-wifi": "   {signalStrength}%",
-    "format-ethernet": "  {ifname}",
+    "format-wifi": " 󰖩  {signalStrength}%",
+    "format-ethernet": " 󰈀  {ifname}",
     "format-disconnected": "Disconnected",
-    "tooltip-format": " {ifname} via {gwaddri}",
-    "tooltip-format-wifi": "  {ifname} @ {essid}\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\nUp: {bandwidthUpBits} Down: {bandwidthDownBits}",
-    "tooltip-format-ethernet": " {ifname}\nIP: {ipaddr}\n up: {bandwidthUpBits} down: {bandwidthDownBits}",
+    "format-linked": " 󰈀  {ifname}",
+    "tooltip-format": "󰈀  {ifname} via {gwaddr}",
+    "tooltip-format-wifi": "󰖩  {ifname} @ {essid}\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\nUp: {bandwidthUpBits} Down: {bandwidthDownBits}",
+    "tooltip-format-ethernet": "󰈀  {ifname}\nIP: {ipaddr}\nUp: {bandwidthUpBits} Down: {bandwidthDownBits}",
     "tooltip-format-disconnected": "Disconnected",
     "max-length": 50,
-    "on-click": "~/.config/waybar/toggle-app.sh network",
+    "on-click": "~/.config/waybar/toggle-app.sh network"
   },
 
   // Battery
