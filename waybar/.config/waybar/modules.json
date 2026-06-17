@@ -80,8 +80,23 @@
   // Calculator
   "custom/calculator": {
     "format": "",
-    "on-click": "wofi-calc",
+    "on-click": "~/.config/waybar/toggle-app.sh calculator",
     "tooltip-format": "Open calculator"
+  },
+
+  // Power Button
+  "custom/powerbutton": {
+    "format": "",
+    "on-click": "hyprshutdown -t 'Shutting down...' --post-cmd 'shutdown -P 10'",
+    "tooltip-format": "Shutdown"
+  },
+
+  // Wofi Application Launcher
+  "custom/appmenuicon": {
+    "format": "",
+    "on-click": "sleep 0.2;pkill wofi || wofi --show drun --replace",
+    "on-click-right": "~/.config/hypr/scripts/keybindings.sh",
+    "tooltip-format": "Left: Open the application launcher\nRight: Show all keybindings"
   },
 
   // Wofi Application Launcher
@@ -231,8 +246,7 @@
     "tooltip-format-ethernet": " {ifname}\nIP: {ipaddr}\n up: {bandwidthUpBits} down: {bandwidthDownBits}",
     "tooltip-format-disconnected": "Disconnected",
     "max-length": 50,
-    "on-click": "~/.config/ml4w/settings/networkmanager.sh",
-    "on-click-right": "~/.config/ml4w/scripts/nm-applet.sh toggle",
+    "on-click": "~/.config/waybar/toggle-app.sh network",
   },
 
   // Battery
@@ -269,7 +283,7 @@
       "car": " ",
       "default": ["", "", ""]
     },
-    "on-click": "pavucontrol"
+    "on-click": "~/.config/waybar/toggle-app.sh audio"
   },
 
   // Bluetooth

@@ -52,7 +52,7 @@
         "car": " ",
         "default": ["🔈", "🔈", "🔊"]
         },
-        "on-click": "wpctl"
+        "on-click": "~/.config/waybar/toggle-app.sh audio"
     },
 
     // Modules Left
@@ -75,12 +75,12 @@
 
     // Modules Right    
     "modules-right": [
-        "custom/updates",
         "pulseaudio",
         // "backlight",
         // "bluetooth",
         // "battery", 
-        "network"
+        "network",
+        "custom/powerbutton"
         // "group/hardware",
         // "group/tools",
         // "custom/exit"
