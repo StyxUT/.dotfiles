@@ -8,73 +8,145 @@
 // by Stephan Raabe (2023) 
 // ----------------------------------------------------- 
 //
-{
-    // General Settings
-    "layer": "top",
-    "margin-bottom": 0,
-    "layer": "top",
-    "margin-left": 0,
-    "margin-right": 0,    
-    "spacing": 0,
+[
+    {
+        "output": ["DP-2", "HDMI-A-1"],
 
-    // Load Modules
-    "include": [
-        "~/.config/waybar/modules.json"
-    ],
+        // General Settings
+        "layer": "top",
+        "margin-bottom": 0,
+        "margin-left": 0,
+        "margin-right": 0,
+        "spacing": 0,
 
-    // Pulseaudio
-    "pulseaudio": {
-        // "scroll-step": 1, // %, can be a float
-        "format": "{icon}   {volume}%",
-        "format-bluetooth": "{volume}% {icon} {format_source}",
-        "format-bluetooth-muted": " {icon} {format_source}",
-        "format-muted": " {format_source}",
-        "format-source": "{volume}% ",
-        "format-source-muted": "",
-        "format-icons": {
-        "headphone": " ",
-        "hands-free": " ",
-        "headset": " ",
-        "phone": " ",
-        "portable": " ",
-        "car": " ",
-        "default": ["🔈", "🔈", "🔊"]
+        // Load Modules
+        "include": [
+            "~/.config/waybar/modules.json"
+        ],
+
+        // Pulseaudio
+        "pulseaudio": {
+            // "scroll-step": 1, // %, can be a float
+            "format": "{icon}   {volume}%",
+            "format-bluetooth": "{volume}% {icon} {format_source}",
+            "format-bluetooth-muted": " {icon} {format_source}",
+            "format-muted": " {format_source}",
+            "format-source": "{volume}% ",
+            "format-source-muted": "",
+            "format-icons": {
+            "headphone": " ",
+            "hands-free": " ",
+            "headset": " ",
+            "phone": " ",
+            "portable": " ",
+            "car": " ",
+            "default": ["🔈", "🔈", "🔊"]
+            },
+            "on-click": "~/.config/waybar/toggle-app.sh audio"
         },
-        "on-click": "~/.config/waybar/toggle-app.sh audio"
+
+        // Modules Left
+        "modules-left": [
+            "custom/appmenuicon",
+            "hyprland/workspaces",
+            // "group/links",
+            // "group/settings",
+            // "group/quicklinks",
+            "custom/empty",
+            "custom/calculator"
+        ],
+
+        // Modules Center
+        "modules-center": [
+            // "hyprland/window",
+            "custom/empty",
+            "clock"
+        ],
+
+        // Modules Right
+        "modules-right": [
+            "pulseaudio",
+            // "backlight",
+            // "bluetooth",
+            // "battery",
+            "network",
+            "custom/powerbutton"
+            // "group/hardware",
+            // "group/tools",
+            // "custom/exit"
+            // "clock",
+            // "tray",
+            // "custom/ml4w-welcome"
+        ]
     },
+    {
+        "output": "DP-3",
 
-    // Modules Left
-    "modules-left": [
-        "custom/appmenuicon",
-        "hyprland/workspaces",
-        // "group/links",
-        // "group/settings",
-        // "group/quicklinks",
-        "custom/empty",
-				"custom/calculator"
-    ],
+        // General Settings
+        "layer": "top",
+        "margin-bottom": 0,
+        "margin-left": 0,
+        "margin-right": 0,
+        "spacing": 0,
 
-    // Modules Center
-    "modules-center": [
-        // "hyprland/window",
-        "custom/empty",
-				"clock",
-				"custom/stocks"
-    ],
+        // Load Modules
+        "include": [
+            "~/.config/waybar/modules.json"
+        ],
 
-    // Modules Right    
-    "modules-right": [
-        "pulseaudio",
-        // "backlight",
-        // "bluetooth",
-        // "battery", 
-        "network",
-        "custom/powerbutton"
-        // "group/hardware",
-        // "group/tools",
-        // "custom/exit"
-        // "clock",
-        // "tray",
-        // "custom/ml4w-welcome"
-    ]
-}
+        // Pulseaudio
+        "pulseaudio": {
+            // "scroll-step": 1, // %, can be a float
+            "format": "{icon}   {volume}%",
+            "format-bluetooth": "{volume}% {icon} {format_source}",
+            "format-bluetooth-muted": " {icon} {format_source}",
+            "format-muted": " {format_source}",
+            "format-source": "{volume}% ",
+            "format-source-muted": "",
+            "format-icons": {
+            "headphone": " ",
+            "hands-free": " ",
+            "headset": " ",
+            "phone": " ",
+            "portable": " ",
+            "car": " ",
+            "default": ["🔈", "🔈", "🔊"]
+            },
+            "on-click": "~/.config/waybar/toggle-app.sh audio"
+        },
+
+        // Modules Left
+        "modules-left": [
+            "custom/appmenuicon",
+            "hyprland/workspaces",
+            // "group/links",
+            // "group/settings",
+            // "group/quicklinks",
+            "custom/empty",
+            "custom/calculator"
+        ],
+
+        // Modules Center
+        "modules-center": [
+            // "hyprland/window",
+            "custom/empty",
+            "custom/stocks"
+        ],
+
+        // Modules Right
+        "modules-right": [
+            "pulseaudio",
+            // "backlight",
+            // "bluetooth",
+            // "battery",
+            "network",
+            "custom/powerbutton"
+            // "group/hardware",
+            // "group/tools",
+            // "custom/exit"
+            // "clock",
+            // "tray",
+            // "custom/ml4w-welcome"
+        ]
+    }
+]
