@@ -58,7 +58,8 @@
     "modules-center": [
         // "hyprland/window",
         "custom/empty",
-				"clock"
+				"clock",
+				"custom/stocks"
     ],
 
     // Modules Right    

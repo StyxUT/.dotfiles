@@ -1,0 +1,34 @@
+refresh_interval: 60
+rotation_interval: 5
+format: "{symbol} {price} ({change}%{icon})"
+
+colors:
+  up: "#00ff99"
+  down: "#e1a7bf"
+  neutral: "#e0e0e0"
+
+assets:
+  - symbol: BTC-USD
+    name: BTC-USD
+    timeframe: 1D
+  - symbol: BLKB
+    name: BLKB
+    timeframe: 1D
+  - symbol: SPY
+    name: SPY
+    timeframe: 1D
+  - symbol: RUM
+    name: RUM
+    timeframe: 1D
+  - symbol: HIVE
+    name: HIVE
+    timeframe: 1D
+  - symbol: MRVL
+    name: MRVL
+    timeframe: 1D
+  - symbol: RTX
+    name: RTX
+    timeframe: 1D
+  - symbol: NIO
+    name: NIO
+    timeframe: 1D

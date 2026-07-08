@@ -386,6 +386,27 @@ window#waybar.empty #window {
     background-color: rgba(15, 55, 84, 0.55);
 }
 
+#custom-stocks {
+    font-size: 13px;
+    color: @textcolor;
+    border-radius: 999px;
+    margin: 4px 6px 4px 0px;
+    padding: 0px 12px;
+    background-color: rgba(15, 55, 84, 0.55);
+}
+
+#custom-stocks.up {
+    color: @accentgreen;
+}
+
+#custom-stocks.down {
+    color: @warning;
+}
+
+#custom-stocks.neutral {
+    color: @textcolor;
+}
+
 #custom-calculator {
     margin: 4px 6px 4px 0px;
     padding: 0px 10px;

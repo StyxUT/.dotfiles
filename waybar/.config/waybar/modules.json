@@ -53,6 +53,14 @@
     "separate-outputs": true
   },
 
+  // Stock Ticker
+  "custom/stocks": {
+    "exec": "~/.local/bin/waybar-stocks --all --config ~/.config/waybar/waybar-stocks.yml",
+    "return-type": "json",
+    "interval": 60,
+    "tooltip": true
+  },
+
   // Empty
   "custom/empty": {
     "format": ""
