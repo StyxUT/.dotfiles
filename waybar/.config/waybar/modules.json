@@ -12,15 +12,11 @@
     "on-scroll-down": "hyprctl dispatch workspace r+1",
     "on-click": "activate",
     "active-only": false,
-    "all-outputs": true,
     "format": "{}",
     "format-icons": {
       "urgent": "",
       "active": "",
       "default": ""
-    },
-    "persistent-workspaces": {
-      "*": 5
     }
   },
 	
