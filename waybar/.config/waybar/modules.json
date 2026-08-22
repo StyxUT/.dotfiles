@@ -269,6 +269,15 @@
     "on-click": "~/.config/waybar/toggle-app.sh audio"
   },
 
+  // Z-5500 output mode
+  "custom/audio-output": {
+    "exec": "~/.local/bin/waybar-audio-output",
+    "return-type": "json",
+    "interval": 2,
+    "on-click": "~/.local/bin/waybar-audio-output toggle",
+    "tooltip": true
+  },
+
   // Bluetooth
   "bluetooth": {
     "format": " {status}",

@@ -42,7 +42,7 @@
             "car": " ",
             "default": ["🔈", "🔈", "🔊"]
             },
-            "on-click": "~/.config/waybar/toggle-app.sh audio"
+            "on-click": "~/.config/waybar/toggle-app.sh pavucontrol"
         },
 
         // Modules Left
@@ -66,6 +66,7 @@
         // Modules Right
         "modules-right": [
             "pulseaudio",
+            "custom/audio-output",
             // "backlight",
             // "bluetooth",
             // "battery",
@@ -112,7 +113,7 @@
             "car": " ",
             "default": ["🔈", "🔈", "🔊"]
             },
-            "on-click": "~/.config/waybar/toggle-app.sh audio"
+            "on-click": "~/.config/waybar/toggle-app.sh pavucontrol"
         },
 
         // Modules Left
@@ -136,6 +137,7 @@
         // Modules Right
         "modules-right": [
             "pulseaudio",
+            "custom/audio-output",
             // "backlight",
             // "bluetooth",
             // "battery",

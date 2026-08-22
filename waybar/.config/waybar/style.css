@@ -373,6 +373,15 @@ window#waybar.empty #window {
     color: @warning;
 }
 
+#custom-audio-output {
+    font-size: 13px;
+    color: @iconcolor;
+    border-radius: 999px;
+    margin: 4px 6px 4px 0px;
+    padding: 0px 12px;
+    background-color: rgba(15, 55, 84, 0.55);
+}
+
 /* -----------------------------------------------------
  * Network
  * ----------------------------------------------------- */

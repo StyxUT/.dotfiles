@@ -22,6 +22,15 @@ case "$1" in
       hyprpwcenter >/dev/null 2>&1 &
     fi
     ;;
+  pavucontrol)
+    if pgrep -x pavucontrol >/dev/null; then
+      pkill -x pavucontrol
+      while pgrep -x pavucontrol >/dev/null; do
+        sleep 0.05
+      done
+    fi
+    pavucontrol >/dev/null 2>&1 &
+    ;;
   *)
     exit 1
     ;;

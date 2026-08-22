@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+card="alsa_card.pci-0000_10_00.4"
+analog_profile="output:analog-surround-51"
+analog_sink="alsa_output.pci-0000_10_00.4.analog-surround-51"
+optical_profile="output:iec958-stereo"
+optical_sink="alsa_output.pci-0000_10_00.4.iec958-stereo"
+
+default_sink="$(pactl get-default-sink)"
+
+if [[ "${1:-}" == "toggle" ]]; then
+    if [[ "$default_sink" == "$optical_sink" ]]; then
+        profile="$analog_profile"
+        sink="$analog_sink"
+    else
+        profile="$optical_profile"
+        sink="$optical_sink"
+    fi
+
+    pactl set-card-profile "$card" "$profile"
+
+    for _ in {1..20}; do
+        if pactl list short sinks | cut -f2 | grep -Fxq "$sink"; then
+            break
+        fi
+        sleep 0.05
+    done
+
+    pactl set-default-sink "$sink"
+    if [[ "$sink" == "$optical_sink" ]]; then
+        pactl set-sink-volume "$sink" 100%
+    fi
+
+    while read -r input _; do
+        pactl move-sink-input "$input" "$sink" 2>/dev/null || true
+    done < <(pactl list short sink-inputs)
+
+    default_sink="$sink"
+fi
+
+case "$default_sink" in
+    "$optical_sink")
+        printf '{"text":"","tooltip":"Optical stereo (click for analog 5.1)","class":"optical"}\n'
+        ;;
+    "$analog_sink")
+        printf '{"text":"","tooltip":"Analog 5.1 (click for optical stereo)","class":"analog"}\n'
+        ;;
+    *)
+        printf '{"text":"?","tooltip":"Other audio output (click for optical stereo)","class":"unknown"}\n'
+        ;;
+esac
