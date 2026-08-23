@@ -1,7 +1,7 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "formatter": true,
-  "model": "openai/gpt-5.6 luna",
+  "model": "openai/gpt-5.6-luna",
   "provider": {
     "ollama": {
       "npm": "@ai-sdk/openai-compatible",
@@ -10,33 +10,13 @@
         "baseURL": "http://arch.home:11434/v1"
       },
       "models": {
-        "qwen3.6:27b": {
-          "name": "qwen3.6:27b",
+        "qwen3.8:27b": {
+          "name": "qwen3.8:27b",
           "reasoning": true,
           "tool_call": true
         },
-        "qwen3.6:27b-ctx8K": {
-          "name": "qwen3.6:27b-ctx8K",
-          "reasoning": true,
-          "tool_call": true
-        },
-        "qwen3.6:27b-ctx16K": {
-          "name": "qwen3.6:27b-ctx16K",
-          "reasoning": true,
-          "tool_call": true
-        },
-        "qwen3.6:27b-ctx32K": {
-          "name": "qwen3.6:27b-ctx32K",
-          "reasoning": true,
-          "tool_call": true
-        },
-        "qwen3.6:27b-ctx64K": {
-          "name": "qwen3.6:27b-ctx64K",
-          "reasoning": true,
-          "tool_call": true
-        },
-        "qwen3.6:27b-ctx100K": {
-          "name": "qwen3.6:27b-ctx100K",
+        "qwen3.8:27b-ctx100K": {
+          "name": "qwen3.8:27b-ctx100K",
           "reasoning": true,
           "tool_call": true
         }
@@ -54,7 +34,7 @@
           "reasoning": true,
           "tool_call": true
         },
-        "gpt-5.6 luna": {
+        "gpt-5.6-luna": {
           "name": "GPT-5.6 Luna",
           "reasoning": true,
           "tool_call": true
@@ -73,7 +53,7 @@
           "reasoning": true,
           "tool_call": true
         },
-        "gpt-5.6 luna": {
+        "gpt-5.6-luna": {
           "name": "GPT-5.6 Luna",
           "reasoning": true,
           "tool_call": true
